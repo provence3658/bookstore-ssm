@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bookstore.dao.CartMapper" >
+  <resultMap id="BaseResultMap" type="com.bookstore.pojo.Cart" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="userId" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="bookId" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="quantity" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="checked" jdbcType="INTEGER" javaType="java.lang.Integer" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, userId, bookId, quantity, checked
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from cart
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from cart
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bookstore.pojo.Cart" >
+    insert into cart (id, userId, bookId, 
+      quantity, checked)
+    values (#{id,jdbcType=INTEGER}, #{userid,jdbcType=INTEGER}, #{bookid,jdbcType=INTEGER}, 
+      #{quantity,jdbcType=INTEGER}, #{checked,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bookstore.pojo.Cart" >
+    insert into cart
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userid != null" >
+        userId,
+      </if>
+      <if test="bookid != null" >
+        bookId,
+      </if>
+      <if test="quantity != null" >
+        quantity,
+      </if>
+      <if test="checked != null" >
+        checked,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="bookid != null" >
+        #{bookid,jdbcType=INTEGER},
+      </if>
+      <if test="quantity != null" >
+        #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="checked != null" >
+        #{checked,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bookstore.pojo.Cart" >
+    update cart
+    <set >
+      <if test="userid != null" >
+        userId = #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="bookid != null" >
+        bookId = #{bookid,jdbcType=INTEGER},
+      </if>
+      <if test="quantity != null" >
+        quantity = #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="checked != null" >
+        checked = #{checked,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bookstore.pojo.Cart" >
+    update cart
+    set userId = #{userid,jdbcType=INTEGER},
+      bookId = #{bookid,jdbcType=INTEGER},
+      quantity = #{quantity,jdbcType=INTEGER},
+      checked = #{checked,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectCartByUserIdBookId" parameterType="map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"></include>
+    from cart
+    where userId=#{userId}
+    and bookId=#{bookId}
+  </select>
+  <select id="selectCartByUserId" parameterType="integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"></include>
+    from cart
+    where userId=#{userId}
+  </select>
+  <select id="selectCartBookCheckedStatusByUserId" resultType="int" parameterType="int">
+    select count(1) from cart where checked = 0 and userId = #{userId}
+  </select>
+  <delete id="deleteByUserIdBookIds" parameterType="map">
+    delete from cart
+    where userId = #{userId}
+    <if test="bookIdList != null">
+        and bookId in
+      <foreach collection="bookIdList" item="item" index="index" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+  </delete>
+  <update id="checkedOrUncheckedBook" parameterType="map">
+    update cart
+    set checked = #{checked}
+    where userId = #{userId}
+    <if test="bookId != null">
+      and bookId = #{bookId}
+    </if>
+  </update>
+  <select id="getCartCount" parameterType="int" resultType="int">
+    select NULLIF (sum(quantity),0) as count from cart where userId = #{userId}
+  </select>
+  <select id="selectCheckedCartByUserId" parameterType="int" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"></include>
+    from cart
+    where userId = #{userId}
+    and checked = 1
+  </select>
+</mapper>

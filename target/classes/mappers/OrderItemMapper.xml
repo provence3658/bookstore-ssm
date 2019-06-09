@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bookstore.dao.OrderItemMapper" >
+  <resultMap id="BaseResultMap" type="com.bookstore.pojo.OrderItem" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="user_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="order_no" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="book_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="book_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="book_image" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="quantity" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="one_price" jdbcType="DECIMAL" javaType="java.math.BigDecimal" />
+      <arg column="total_price" jdbcType="DECIMAL" javaType="java.math.BigDecimal" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, order_no, book_id, book_name, book_image, quantity, one_price, total_price
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from orderitem
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from orderitem
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bookstore.pojo.OrderItem" >
+    insert into orderitem (id, user_id, order_no, 
+      book_id, book_name, book_image, 
+      quantity, one_price, total_price
+      )
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{orderNo,jdbcType=BIGINT}, 
+      #{bookId,jdbcType=INTEGER}, #{bookName,jdbcType=VARCHAR}, #{bookImage,jdbcType=VARCHAR}, 
+      #{quantity,jdbcType=INTEGER}, #{onePrice,jdbcType=DECIMAL}, #{totalPrice,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bookstore.pojo.OrderItem" >
+    insert into orderitem
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="orderNo != null" >
+        order_no,
+      </if>
+      <if test="bookId != null" >
+        book_id,
+      </if>
+      <if test="bookName != null" >
+        book_name,
+      </if>
+      <if test="bookImage != null" >
+        book_image,
+      </if>
+      <if test="quantity != null" >
+        quantity,
+      </if>
+      <if test="onePrice != null" >
+        one_price,
+      </if>
+      <if test="totalPrice != null" >
+        total_price,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="orderNo != null" >
+        #{orderNo,jdbcType=BIGINT},
+      </if>
+      <if test="bookId != null" >
+        #{bookId,jdbcType=INTEGER},
+      </if>
+      <if test="bookName != null" >
+        #{bookName,jdbcType=VARCHAR},
+      </if>
+      <if test="bookImage != null" >
+        #{bookImage,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null" >
+        #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="onePrice != null" >
+        #{onePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="totalPrice != null" >
+        #{totalPrice,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bookstore.pojo.OrderItem" >
+    update orderitem
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="orderNo != null" >
+        order_no = #{orderNo,jdbcType=BIGINT},
+      </if>
+      <if test="bookId != null" >
+        book_id = #{bookId,jdbcType=INTEGER},
+      </if>
+      <if test="bookName != null" >
+        book_name = #{bookName,jdbcType=VARCHAR},
+      </if>
+      <if test="bookImage != null" >
+        book_image = #{bookImage,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null" >
+        quantity = #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="onePrice != null" >
+        one_price = #{onePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="totalPrice != null" >
+        total_price = #{totalPrice,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bookstore.pojo.OrderItem" >
+    update orderitem
+    set user_id = #{userId,jdbcType=INTEGER},
+      order_no = #{orderNo,jdbcType=BIGINT},
+      book_id = #{bookId,jdbcType=INTEGER},
+      book_name = #{bookName,jdbcType=VARCHAR},
+      book_image = #{bookImage,jdbcType=VARCHAR},
+      quantity = #{quantity,jdbcType=INTEGER},
+      one_price = #{onePrice,jdbcType=DECIMAL},
+      total_price = #{totalPrice,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="getByOrderNoUserId" parameterType="map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"></include>
+    from orderitem
+    where order_no = #{orderNo}
+    and user_id = #{userId}
+  </select>
+  <select id="getByOrderNo" parameterType="map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"></include>
+    from orderitem
+    where order_no = #{orderNo}
+  </select>
+  <insert id="batchInsert" parameterType="list">
+    insert into orderitem (id, user_id, order_no,
+      book_id, book_name, book_image,
+      quantity, one_price, total_price
+      ) values
+    <foreach collection="orderItemList" index="index" item="item" separator=",">
+      (
+      #{item.id}, #{item.userId}, #{item.orderNo}, #{item.bookId}, #{item.bookName},
+      #{item.bookImage}, #{item.quantity}, #{item.onePrice}, #{item.totalPrice}
+      )
+    </foreach>
+  </insert>
+</mapper>

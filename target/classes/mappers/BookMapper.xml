@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bookstore.dao.BookMapper" >
+  <resultMap id="BaseResultMap" type="com.bookstore.pojo.Book" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="category_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="author" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="price" jdbcType="DECIMAL" javaType="java.math.BigDecimal" />
+      <arg column="image" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="description" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="stock" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="status" jdbcType="INTEGER" javaType="java.lang.Integer" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, category_id, name, author, price, image, description, stock, status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from book
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from book
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bookstore.pojo.Book" >
+    insert into book (id, category_id, name, 
+      author, price, image, 
+      description, stock, status
+      )
+    values (#{id,jdbcType=INTEGER}, #{categoryId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
+      #{author,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, #{image,jdbcType=VARCHAR}, 
+      #{description,jdbcType=VARCHAR}, #{stock,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bookstore.pojo.Book" >
+    insert into book
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="categoryId != null" >
+        category_id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="author != null" >
+        author,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="image != null" >
+        image,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="stock != null" >
+        stock,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="categoryId != null" >
+        #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null" >
+        #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="image != null" >
+        #{image,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="stock != null" >
+        #{stock,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bookstore.pojo.Book" >
+    update book
+    <set >
+      <if test="categoryId != null" >
+        category_id = #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null" >
+        author = #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="image != null" >
+        image = #{image,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="stock != null" >
+        stock = #{stock,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bookstore.pojo.Book" >
+    update book
+    set category_id = #{categoryId,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      author = #{author,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      image = #{image,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      stock = #{stock,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"></include>
+    from book
+  </select>
+  <select id="selectByNameAndBookId" resultMap="BaseResultMap" parameterType="map">
+    select
+    <include refid="Base_Column_List"></include>
+    from book
+    <where>
+      <if test="bookName != null">
+        and name like #{bookName}
+      </if>
+      <if test="bookId != null">
+        and id = #{bookId}
+      </if>
+    </where>
+  </select>
+  <select id="selectByNameAndCategory" resultMap="BaseResultMap" parameterType="map">
+    select
+    <include refid="Base_Column_List"></include>
+    from book
+    where status = 1
+    <if test="bookName != null">
+      and name like #{bookName}
+    </if>
+    <if test="categoryIdList != null">
+      and category_id in
+      <foreach item="item" index="index" open="(" separator="," close=")" collection="categoryIdList">
+        #{item}
+      </foreach>
+    </if>
+  </select>
+  <select id="getBookNumber" resultType="int">
+    select count(1) from book
+  </select>
+</mapper>
